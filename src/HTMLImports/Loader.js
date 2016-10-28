@@ -24,6 +24,14 @@ var Loader = function(onLoad, onComplete) {
   this.oncomplete = onComplete;
   this.inflight = 0;
   this.pending = {};
+
+  this._jsonpUtilitiesAdded = false;
+  this._isIE = (function() {
+    var ua = window.navigator.userAgent;
+
+    return ua.indexOf('MSIE ') !== -1
+      || ua.indexOf('Trident/') !== -1;
+  })();
 };
 
 Loader.prototype = {
@@ -101,6 +109,14 @@ Loader.prototype = {
       setTimeout(function() {
           this.receive(url, elt, null, body);
       }.bind(this), 0);
+    } else if(this._isIE && this._urlIsCrossOrigin(url)) {
+      this._addJsonpUtilities();
+
+      var script = document.createElement('script');
+      script.async = 'async';
+      script.setAttribute('data-filename', url.substring(url.lastIndexOf('/')));
+      script.src = url + '.jsonp';
+      document.body.appendChild(script);
     } else {
       var receiveXhr = function(err, resource, redirectedUrl) {
         this.receive(url, elt, err, resource, redirectedUrl);
@@ -129,6 +145,28 @@ Loader.prototype = {
   checkDone: function() {
     if (!this.inflight) {
       this.oncomplete();
+    }
+  },
+
+  _urlIsCrossOrigin: function(url) {
+    return url.indexOf(window.location.origin + '/') !== 0;
+  },
+
+  _addJsonpUtilities: function() {
+    if (!this._jsonpUtilitiesAdded) {
+      window._d2l_receiveJsonpImport = function(filename, resource) {
+        var scriptElements = document.querySelectorAll('script');
+        for(var i = 0; i < scriptElements.length; ++i) {
+          var script = scriptElements[i];
+          var scriptFilename = script.getAttribute('data-filename');
+          if (scriptFilename === filename) {
+            var url = script.src.substr(0, script.src.length - 6); // strip jsonp
+            this.receive(url, null, null, resource, null);
+            script.parentElement.removeChild(script);
+          }
+        }
+      }.bind(this);
+      this._jsonpUtilitiesAdded = true;
     }
   }
 
