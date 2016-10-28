@@ -25,7 +25,6 @@ var Loader = function(onLoad, onComplete) {
   this.inflight = 0;
   this.pending = {};
 
-  this._jsonpUtilitiesAdded = false;
   this._isIE = (function() {
     var ua = window.navigator.userAgent;
 
@@ -153,8 +152,8 @@ Loader.prototype = {
   },
 
   _addJsonpUtilities: function() {
-    if (!this._jsonpUtilitiesAdded) {
-      window._d2l_receiveJsonpImport = function(filename, resource) {
+    window._d2l_receiveJsonpImport = window._d2l_receiveJsonpImport
+      || function(filename, resource) {
         var scriptElements = document.querySelectorAll('script');
         for(var i = 0; i < scriptElements.length; ++i) {
           var script = scriptElements[i];
@@ -166,8 +165,6 @@ Loader.prototype = {
           }
         }
       }.bind(this);
-      this._jsonpUtilitiesAdded = true;
-    }
   }
 
 };
