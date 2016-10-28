@@ -113,7 +113,6 @@ Loader.prototype = {
 
       var script = document.createElement('script');
       script.async = 'async';
-      script.setAttribute('data-filename', url.substring(url.lastIndexOf('/') + 1));
       script.src = url + '.jsonp';
       document.body.appendChild(script);
     } else {
@@ -153,13 +152,13 @@ Loader.prototype = {
 
   _addJsonpUtilities: function() {
     window._d2l_receiveJsonpImport = window._d2l_receiveJsonpImport
-      || function(filename, resource) {
+      || function(resourceId, resource) {
         var scriptElements = document.querySelectorAll('script');
         for(var i = 0; i < scriptElements.length; ++i) {
           var script = scriptElements[i];
-          var scriptFilename = script.getAttribute('data-filename');
-          if (scriptFilename === filename) {
-            var url = script.src.substr(0, script.src.length - 6); // strip jsonp
+          var url = script.src.substr(0, script.src.length - 6); // strip jsonp
+          var lastIndex = url.lastIndexOf(resouceId);
+          if (lastIndex !== -1 && lastIndex) === url.length - resourceId.length) {
             this.receive(url, null, null, resource, null);
             script.parentElement.removeChild(script);
           }
