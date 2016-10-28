@@ -114,7 +114,7 @@ Loader.prototype = {
 
       var script = document.createElement('script');
       script.async = 'async';
-      script.setAttribute('data-filename', url.substring(url.lastIndexOf('/')));
+      script.setAttribute('data-filename', url.substring(url.lastIndexOf('/') + 1));
       script.src = url + '.jsonp';
       document.body.appendChild(script);
     } else {
