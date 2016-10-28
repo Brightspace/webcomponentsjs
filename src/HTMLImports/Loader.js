@@ -161,6 +161,7 @@ Loader.prototype = {
           if (lastIndex !== -1 && lastIndex) === url.length - resourceId.length) {
             this.receive(url, null, null, resource, null);
             script.parentElement.removeChild(script);
+            break;
           }
         }
       }.bind(this);
