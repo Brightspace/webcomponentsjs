@@ -157,7 +157,7 @@ Loader.prototype = {
         for(var i = 0; i < scriptElements.length; ++i) {
           var script = scriptElements[i];
           var url = script.src.substr(0, script.src.length - 6); // strip jsonp
-          var lastIndex = url.lastIndexOf(resouceId);
+          var lastIndex = url.lastIndexOf(resourceId);
           if (lastIndex !== -1 && lastIndex === url.length - resourceId.length) {
             this.receive(url, null, null, resource, null);
             script.parentElement.removeChild(script);
