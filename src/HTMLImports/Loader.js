@@ -113,7 +113,7 @@ Loader.prototype = {
 
       var script = document.createElement('script');
       script.async = 'async';
-      script.src = url + '.jsonp';
+      script.src = url + '.js';
       document.body.appendChild(script);
     } else {
       var receiveXhr = function(err, resource, redirectedUrl) {
