@@ -156,7 +156,7 @@ Loader.prototype = {
         var scriptElements = document.querySelectorAll('script');
         for(var i = 0; i < scriptElements.length; ++i) {
           var script = scriptElements[i];
-          var url = script.src.substr(0, script.src.length - 6); // strip jsonp
+          var url = script.src.substr(0, script.src.length - 3); // strip .js extension
           var lastIndex = url.lastIndexOf(resourceId);
           if (lastIndex !== -1 && lastIndex === url.length - resourceId.length) {
             this.receive(url, null, null, resource, null);
